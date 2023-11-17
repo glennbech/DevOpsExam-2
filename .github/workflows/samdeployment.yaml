@@ -18,7 +18,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-west-1  # Replace <din-aws-region> with eu-west-1
+        aws-region: eu-west-1 
 
     - name: Install SAM CLI
       run: |
@@ -31,7 +31,7 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         sam build
-        sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM  # Replace <din-aws-region> with eu-west-1
+        sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM 
 
     - name: Build SAM Application (no deploy)
       if: github.ref != 'refs/heads/main'
