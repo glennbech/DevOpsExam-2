@@ -18,14 +18,16 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-west-1 
+        aws-region: eu-west-1
 
     - name: Build and Deploy SAM Application
       if: github.ref == 'refs/heads/main'
       run: |
-        sam build
-        /usr/local/bin/sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM 
+        sam build --template-file .github/workflows/template.yml
+        /usr/local/bin/sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM --template-file .github/workflows/template.yml
 
     - name: Build SAM Application (no deploy)
       if: github.ref != 'refs/heads/main'
       run: sam build
+
+    
