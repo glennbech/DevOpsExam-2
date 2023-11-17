@@ -23,8 +23,8 @@ jobs:
     - name: Build and Deploy SAM Application
       if: github.ref == 'refs/heads/main'
       run: |
-        sam build --template-file .github/workflows/template.yml
-        /usr/local/bin/sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM --template-file .github/workflows/template.yml
+        sam build --template-file samdeployment.yaml
+        /usr/local/bin/sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM --template-file samdeployment.yaml
 
     - name: Build SAM Application (no deploy)
       if: github.ref != 'refs/heads/main'
