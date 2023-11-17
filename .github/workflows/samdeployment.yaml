@@ -1,12 +1,9 @@
 name: SAM Build and Deploy
 
-name: SAM Build and Deploy
-
 on:
   push:
     branches:
       - main
-      - '*'
 
 jobs:
   build-and-deploy:
@@ -34,7 +31,7 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         sam build
-        sam deploy --stack-name <din-stack-navn> --region eu-west-1 --capabilities CAPABILITY_IAM  # Replace <din-aws-region> with eu-west-1
+        sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM  # Replace <din-aws-region> with eu-west-1
 
     - name: Build SAM Application (no deploy)
       if: github.ref != 'refs/heads/main'
