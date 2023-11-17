@@ -31,7 +31,7 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         sam build
-        sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM 
+        /usr/local/bin/sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM 
 
     - name: Build SAM Application (no deploy)
       if: github.ref != 'refs/heads/main'
