@@ -1,14 +1,28 @@
-name: SAM Build and Deploy
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
+Globals:
+  Function:
+    Timeout: 3
+
 Resources:
-  MyFunction:
+  SentimentFunction:
     Type: AWS::Serverless::Function
+    Auth:
+      Authorizer: NONE
     Properties:
-      Handler: index.handler
-      Runtime: nodejs14.x
-      CodeUri: .
+      CodeUri: lambda/
+      Handler: app.handler
+      Role: !GetAtt LambdaRole.Arn
+      Runtime: python3.8
+      Timeout: 10
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /sentiment
+            Method: post
+name: SAM Build and Deploy
 on:
   push:
     branches:
