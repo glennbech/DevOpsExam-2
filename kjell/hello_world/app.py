@@ -18,8 +18,8 @@ rekognition_client = boto3.client('rekognition', region_name='eu-west-1')
 # Oppgave 1A
 BUCKET_NAME = os.environ.get('BUCKET_NAME', 'kandidat2028') 
 #her kan du bytte "default_bucket_name" med kandidat2028 for å se bucketen jeg har laget
-# export BUCKET_NAME=ENNYTEST
-# echo $BUCKET_NAME
+# export BUCKET_NAME=ENNYTEST 
+# echo $BUCKET_NAME 
 # Disse her lager en miljøvariabel for selve bucket navnet, echo er for å sjekke om du har laget  variabelen
 # neste steger er å cd seg selv helt ned til hello world mappen og skrive "python3 app.py" da blir en bucket skrevet og laget med variabel navnet
     
