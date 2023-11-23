@@ -16,7 +16,7 @@ s3_client = boto3.client('s3', region_name='eu-west-1')
 rekognition_client = boto3.client('rekognition', region_name='eu-west-1')
 
 # Oppgave 1A
-BUCKET_NAME = os.environ.get('BUCKET_NAME', 'kandidat2028') 
+BUCKET_NAME = os.environ.get('BUCKET_NAME') 
 #her kan du bytte "default_bucket_name" med kandidat2028 for å se bucketen jeg har laget
 # export BUCKET_NAME=ENNYTEST 
 # echo $BUCKET_NAME 

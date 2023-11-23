@@ -14,7 +14,7 @@ Resources:
   Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref ImageBucketName
+      BucketName: !Ref kandidat2028
 
   HelloWorldFunction:
     Type: AWS::Serverless::Function
@@ -22,6 +22,9 @@ Resources:
       CodeUri: hello_world/
       Handler: app.lambda_handler
       Runtime: python3.9
+      Enviroment:
+        Variables:
+          BUCKET_NAME: !Ref Bucket
       Architectures:
         - x86_64
       Policies:
@@ -36,9 +39,9 @@ Resources:
   ImageBucketName:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: /kjell/imagebucketname
+      Name: !ref BUCKET_NAME
       Type: String
-      Value: "kjellsimagebucket" # Default bucket name
+      Value: "kandidat2028" # Default bucket name
       Description: "S3 bucket name for storing images"
 
 Outputs:

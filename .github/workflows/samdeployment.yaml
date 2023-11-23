@@ -1,29 +1,5 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
-
-Globals:
-  Function:
-    Timeout: 3
-
-Resources:
-  SentimentFunction:
-    Type: AWS::Serverless::Function
-    Auth:
-      Authorizer: NONE
-    Properties:
-      CodeUri: lambda/
-      Handler: app.handler
-      Role: !GetAtt LambdaRole.Arn
-      Runtime: python3.8
-      Timeout: 10
-      Events:
-        HelloWorld:
-          Type: Api
-          Properties:
-            Path: /sentiment
-            Method: post
-
 name: SAM Build and Deploy
+
 on:
   push:
     branches:
@@ -47,8 +23,8 @@ jobs:
     - name: Build and Deploy SAM Application
       if: github.ref == 'refs/heads/main'
       run: |
-        sam build --template-file .github/workflows/samdeployment.yaml
-        sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM --template-file .github/workflows/samdeployment.yaml
+        sam build
+        sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM --template-file template.yaml
 
     - name: Build SAM Application (no deploy)
       if: github.ref != 'refs/heads/main'
