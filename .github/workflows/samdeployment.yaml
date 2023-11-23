@@ -22,6 +22,7 @@ Resources:
           Properties:
             Path: /sentiment
             Method: post
+
 name: SAM Build and Deploy
 on:
   push:
@@ -47,9 +48,8 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         sam build --template-file .github/workflows/samdeployment.yaml
-        /usr/local/bin/sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM --template-file .github/workflows/samdeployment.yaml
+        sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM --template-file .github/workflows/samdeployment.yaml
 
     - name: Build SAM Application (no deploy)
       if: github.ref != 'refs/heads/main'
       run: sam build
-    
