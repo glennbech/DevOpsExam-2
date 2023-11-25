@@ -16,6 +16,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      - name: Login to Amazon ECR
+        env:
+          AWS_REGION: 'eu-west-1'  # Update this with your AWS region
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ECR_REGISTRY: '244530008913.dkr.ecr.eu-west-1.amazonaws.com'  # Update this with your ECR registry URL
+        run: |
+          echo "Logging in to Amazon ECR"
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+
       - name: Build and push Docker image to ECR
         env:
           AWS_REGION: 'eu-west-1'  # Update this with your AWS region
@@ -27,9 +37,6 @@ jobs:
           COMMIT_HASH=$(git rev-parse --short HEAD)
           TAGS=("$ECR_REGISTRY/$IMAGE_NAME:$COMMIT_HASH" "$ECR_REGISTRY/$IMAGE_NAME:latest" "$ECR_REGISTRY/$IMAGE_NAME:main")
 
-          echo "Logging in to Amazon ECR"
-          echo $AWS_SECRET_ACCESS_KEY | docker login -u AWS --password-stdin $ECR_REGISTRY
-
           echo "Building and pushing Docker image"
           docker buildx create --use
           docker buildx inspect --bootstrap
@@ -39,4 +46,3 @@ jobs:
           for tag in "${TAGS[@]}"; do
             docker push "$tag"
           done
-
