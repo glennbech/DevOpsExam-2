@@ -24,7 +24,7 @@ jobs:
           ECR_REGISTRY: '244530008913.dkr.ecr.eu-west-1.amazonaws.com'  # Update this with your ECR registry URL
           IMAGE_NAME: 'ecrkandidat2028'  # Update this with your repository name
         run: |
-          COMMIT_HASH=`git rev-parse --short HEAD`
+          COMMIT_HASH=$(git rev-parse --short HEAD)
           $TAGS = @("$ECR_REGISTRY/$IMAGE_NAME:$COMMIT_HASH", "$ECR_REGISTRY/$IMAGE_NAME:latest", "$ECR_REGISTRY/$IMAGE_NAME:main")
 
           Write-Host "Logging in to Amazon ECR"
