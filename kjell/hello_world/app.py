@@ -1,33 +1,18 @@
-import json
-import boto3
 import os
-
-# Denne koden kan også kjøres som en selvstendig applikasjon (Uten SAM) bare gjøre følgende
-# (dersom man har python på maskinen sin altså...)
-#
-# Instruksjoner for å kjøre ... (Kan sikkert lage container senere ..)
-#
-# pip3 install -r requirements.txt
-# python3 app.py
-#
-# Hilsen Kjell
+import boto3
+import json
 
 s3_client = boto3.client('s3', region_name='eu-west-1')
 rekognition_client = boto3.client('rekognition', region_name='eu-west-1')
 
-# Oppgave 1A
-BUCKET_NAME = os.environ.get('BUCKET_NAME') 
-#her kan du bytte "default_bucket_name" med kandidat2028 for å se bucketen jeg har laget
-# export BUCKET_NAME=ENNYTEST 
-# echo $BUCKET_NAME 
-# Disse her lager en miljøvariabel for selve bucket navnet, echo er for å sjekke om du har laget  variabelen
-# neste steger er å cd seg selv helt ned til hello world mappen og skrive "python3 app.py" da blir en bucket skrevet og laget med variabel navnet
-    
+# Updated to use correct environment variable
+BUCKET_NAME = os.environ.get ('BUCKET_NAME')
+print(f"Retrieved bucket name: {BUCKET_NAME}")  # Debug print
 
 
 def create_s3_bucket(bucket_name):
     try:
-        location_constraint = s3_client.meta.region_name  
+        location_constraint = s3_client.meta.region_name
         s3_client.create_bucket(
             Bucket=bucket_name,
             CreateBucketConfiguration={'LocationConstraint': location_constraint}
