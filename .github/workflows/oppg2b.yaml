@@ -13,16 +13,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up PowerShell
-        uses: PowerShell/PowerShell@latest
-
       - name: Login to Amazon ECR
         env:
           AWS_REGION: 'eu-west-1'  # Update this with your AWS region
         run: |
-          $password = (Get-ECRLoginCommand).Password | ConvertTo-SecureString -AsPlainText -Force
-          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList @("AWS", $password)
-          docker login -u AWS -p $creds -e none https://244530008913.dkr.ecr.eu-west-1.amazonaws.com
+          $password = (aws ecr get-login-password --region $AWS_REGION)
+          docker login -u AWS -p $password -e none https://244530008913.dkr.ecr.eu-west-1.amazonaws.com
 
       - name: Build and push Docker image to ECR
         env:
