@@ -6,9 +6,11 @@ s3_client = boto3.client('s3', region_name='eu-west-1')
 rekognition_client = boto3.client('rekognition', region_name='eu-west-1')
 
 # Updated to use correct environment variable
-BUCKET_NAME = os.environ.get ('BUCKET_NAME')
+BUCKET_NAME = os.environ.get('BUCKET_NAME')
 print(f"Retrieved bucket name: {BUCKET_NAME}")  # Debug print
 
+def lambda_handler(event, context):
+    # List all objects in the S3 bucket
     paginator = s3_client.get_paginator('list_objects_v2')
     rekognition_results = []  # Store the results
 
@@ -23,7 +25,7 @@ print(f"Retrieved bucket name: {BUCKET_NAME}")  # Debug print
                     }
                 },
                 SummarizationAttributes={
-                    'MinConfidence': 80,  # Confidence level threshold
+                    'MinConfidence': 80,  
                     'RequiredEquipmentTypes': ['FACE_COVER']
                 }
             )
@@ -31,9 +33,9 @@ print(f"Retrieved bucket name: {BUCKET_NAME}")  # Debug print
 
     return {
         "statusCode": 200,
-        "body":  json.dumps(rekognition_results),
+        "body": json.dumps(rekognition_results),
     }
 
 print(lambda_handler(None, None))
 
-#change test
+
