@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - '*'
 
 jobs:
   build-deploy:
@@ -29,9 +30,11 @@ jobs:
       - name: Set BUCKET_NAME for SAM deploy
         run: echo "MyBucketName=kandidat-2028" >> $GITHUB_ENV
       
-      - name: Build and deploy SAM application
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          cd kjell
-          sam build --use-container
-          sam deploy --config-file samconfig.toml --no-confirm-changeset --no-fail-on-empty-changeset
+      # Build SAM application
+      - name: Build SAM application
+        run: cd kjell && sam build --use-container
+
+      # Deploy SAM application for the main branch
+      - name: Deploy SAM application
+        if: github.ref == 'refs/heads/main'
+        run: cd kjell && sam deploy --config-file samconfig.toml --no-confirm-changeset --no-fail-on-empty-changeset
