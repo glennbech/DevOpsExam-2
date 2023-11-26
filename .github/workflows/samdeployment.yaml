@@ -1,4 +1,4 @@
-name: SAM Build and Deploy
+name: sam building and deploying
 
 on:
   push:
@@ -6,26 +6,31 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build-deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Setup AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-west-1
-
-    - name: Build and Deploy SAM Application
-      if: github.ref == 'refs/heads/main'
-      run: |
-        sam build
-        sam deploy --stack-name DevOpsExam --region eu-west-1 --capabilities CAPABILITY_IAM --template-file template.yaml
-
-    - name: Build SAM Application (no deploy)
-      if: github.ref != 'refs/heads/main'
-      run: sam build
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.16
+      
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+        
+      - name: Set up SAM
+        run: pip install aws-sam-cli
+          
+      - name: Set BUCKET_NAME for SAM deploy
+        run: echo "MyBucketName=kandidat-2028" >> $GITHUB_ENV
+      
+      - name: Build and deploy SAM application
+        run: |
+          cd kjell
+          sam build --use-container
+          sam deploy sam deploy --config-file samconfig.toml --no-confirm-changeset --no-fail-on-empty-changeset
