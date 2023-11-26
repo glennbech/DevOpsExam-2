@@ -1,68 +1,37 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
-Description: >
-  kjell
+name: Java Build and Publish
 
-  Sample SAM Template for kjell
+on:
+  push:
+    branches:
+      - main
 
-Globals:
-  Function:
-    Timeout: 60
-    MemorySize: 512
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
 
-AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
-Description: >
-  kjell
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-  Sample SAM Template for kjell
+      - name: Log in to Amazon ECR
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          ECR_REGISTRY="244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028"
+          AWS_REGION="eu-west-1"
 
-Globals:
-  Function:
-    Timeout: 60
-    MemorySize: 512
+          # Log in to Amazon ECR
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
 
-Resources:
-  Bucket:
-  Type: AWS::S3::Bucket
-  Properties:
-    BucketName: kandidat2028
+      - name: Build and push Docker image
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          ECR_REGISTRY="244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028"
+          IMAGE_NAME="ecrkandidat2028"
 
-  HelloWorldFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: hello_world/
-      Handler: app.lambda_handler
-      Runtime: python3.9
-      Environment:
-        Variables:
-          BUCKET_NAME: !Ref Bucket
-      Policies:
-        - AmazonRekognitionFullAccess
-      Events:
-        HelloWorld:
-          Type: Api
-          Properties:
-            Path: DevOpsExam/kjell/hello_world
-            Method: get
-
-  ImageBucketName:
-    Type: AWS::SSM::Parameter
-    Properties:
-      Name: !Sub "/${Bucket}/imagebucketname"
-      Type: String
-      Value: !Ref Bucket
-      Description: "S3 bucket name for storing images"
-
-Outputs:
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+          # Build and push Docker image
+          docker build -t "$ECR_REGISTRY/$IMAGE_NAME:$COMMIT_HASH" .
+          docker tag "$ECR_REGISTRY/$IMAGE_NAME:$COMMIT_HASH" "$ECR_REGISTRY/$IMAGE_NAME:latest"
+          docker tag "$ECR_REGISTRY/$IMAGE_NAME:$COMMIT_HASH" "$ECR_REGISTRY/$IMAGE_NAME:main"
+          docker push "$ECR_REGISTRY/$IMAGE_NAME:$COMMIT_HASH"
+          docker push "$ECR_REGISTRY/$IMAGE_NAME:latest"
+          docker push "$ECR_REGISTRY/$IMAGE_NAME:main"
