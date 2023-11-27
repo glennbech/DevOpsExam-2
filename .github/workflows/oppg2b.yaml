@@ -37,32 +37,35 @@ jobs:
           docker push $IMAGE_URI:latest
 
   terraform-apply:
-    needs: build-and-publish
-    runs-on: ubuntu-latest
+  needs: build-and-publish
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up AWS credentials for Terraform
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
+    - name: Set up AWS credentials for Terraform
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1
 
-      - name: Configure Terraform
-        run: |
-          mkdir -p ~/.terraform
-          echo "backend \"s3\" {
-            bucket = \"kandidat-2028\"
-            key    = \"terraform.tfstate\"
-            region = \"eu-west-1\"
-          }" > ~/.terraform/backend.tf
+    - name: Configure Terraform
+      run: |
+        mkdir -p ~/.terraform
+        echo "backend \"s3\" {
+          bucket = \"kandidat-2028\"
+          key    = \"terraform.tfstate\"
+          region = \"eu-west-1\"
+        }" > infra/backend.tf
+      working-directory: ${{ github.workspace }}
 
-      - name: Initialize Terraform
-        run: terraform init
+    - name: Initialize Terraform
+      run: terraform init
+      working-directory: infra
 
-      - name: Apply Terraform changes
-        run: terraform apply -auto-approve
+    - name: Apply Terraform changes
+      run: terraform apply -auto-approve
+      working-directory: infra
 
