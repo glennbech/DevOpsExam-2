@@ -21,22 +21,18 @@ jobs:
           aws-region: eu-west-1
 
       - name: Log in to Amazon ECR
-        run: |
-          ECR_REGISTRY="244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028"
-          aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
+        run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
       - name: Build and push Docker image
         if: github.ref == 'refs/heads/main'
         run: |
           COMMIT_HASH=$(git rev-parse --short HEAD)
-          ECR_REGISTRY="244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028"
           IMAGE_NAME="ecrkandidat2028"
 
           # Build and push Docker image
-          docker build -t "$ECR_REGISTRY/$IMAGE_NAME:$COMMIT_HASH" .
-          docker tag "$ECR_REGISTRY/$IMAGE_NAME:$COMMIT_HASH" "$ECR_REGISTRY/$IMAGE_NAME:latest"
-          docker tag "$ECR_REGISTRY/$IMAGE_NAME:$COMMIT_HASH" "$ECR_REGISTRY/$IMAGE_NAME:main"
-          docker push "$ECR_REGISTRY/$IMAGE_NAME:$COMMIT_HASH"
-          docker push "$ECR_REGISTRY/$IMAGE_NAME:latest"
-          docker push "$ECR_REGISTRY/$IMAGE_NAME:main"
-
+          docker build -t "${{ secrets.ECR_REGISTRY }}/$IMAGE_NAME:$COMMIT_HASH" .
+          docker tag "${{ secrets.ECR_REGISTRY }}/$IMAGE_NAME:$COMMIT_HASH" "${{ secrets.ECR_REGISTRY }}/$IMAGE_NAME:latest"
+          docker tag "${{ secrets.ECR_REGISTRY }}/$IMAGE_NAME:$COMMIT_HASH" "${{ secrets.ECR_REGISTRY }}/$IMAGE_NAME:main"
+          docker push "${{ secrets.ECR_REGISTRY }}/$IMAGE_NAME:$COMMIT_HASH"
+          docker push "${{ secrets.ECR_REGISTRY }}/$IMAGE_NAME:latest"
+          docker push "${{ secrets.ECR_REGISTRY }}/$IMAGE_NAME:main"
