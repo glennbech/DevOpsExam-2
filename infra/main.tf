@@ -78,11 +78,4 @@ data "aws_iam_policy_document" "policy" {
     resources = ["*"]
   }
 }
-terraform {
-  backend "s3" {
-    bucket = "kandidat-2028"
-    key    = "terraform.tfstate"
-    region = "eu-west-1"
-  }
-}
 
