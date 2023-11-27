@@ -22,7 +22,9 @@ jobs:
           aws-region: eu-west-1
 
       - name: Log in to Amazon ECR
-        run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+        run: |
+          ECR_REGISTRY="${{ secrets.ECR_REGISTRY }}"
+          aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
         
       - name: Build docker image
         run: docker build -t ${{ secrets.ECR_REGISTRY }}/ecrkandidat2028:latest .
@@ -30,8 +32,9 @@ jobs:
       - name: Build and push Docker image
         if: github.ref == 'refs/heads/main'
         run: |
-            COMMIT_HASH=$(git rev-parse --short=8 HEAD)
-            IMAGE_URI=${{ secrets.ECR_REGISTRY }}/ecrkandidat2028
-            docker tag ${{ secrets.ECR_REGISTRY }}/ecrkandidat2028:latest $IMAGE_URI:$COMMIT_HASH
-            docker push $IMAGE_URI:$COMMIT_HASH
-            docker push $IMAGE_URI:latest
+          COMMIT_HASH=$(git rev-parse --short=8 HEAD)
+          IMAGE_URI=${{ secrets.ECR_REGISTRY }}/ecrkandidat2028
+          docker tag ${{ secrets.ECR_REGISTRY }}/ecrkandidat2028:latest $IMAGE_URI:$COMMIT_HASH
+          docker push $IMAGE_URI:$COMMIT_HASH
+          docker push $IMAGE_URI:latest
+
