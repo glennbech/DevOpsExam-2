@@ -1,4 +1,3 @@
-
 FROM python:3.9-slim
 
 
@@ -8,7 +7,6 @@ WORKDIR /kjell/hello_world
 COPY requirements.txt .
 
 
-RUN python -m venv venv
 ENV PATH="/kjell/hello_world/venv/bin:$PATH"
 
 

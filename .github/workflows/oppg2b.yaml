@@ -26,6 +26,7 @@ jobs:
           aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
 
       - name: Build and push Docker image
+        if: github.ref == 'refs/heads/main'
         run: |
           COMMIT_HASH=$(git rev-parse --short HEAD)
           ECR_REGISTRY="244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028"
@@ -38,4 +39,5 @@ jobs:
           docker push "$ECR_REGISTRY/$IMAGE_NAME:$COMMIT_HASH"
           docker push "$ECR_REGISTRY/$IMAGE_NAME:latest"
           docker push "$ECR_REGISTRY/$IMAGE_NAME:main"
+
 
