@@ -51,6 +51,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
 
+      - name: Check if on main branch
+        run: |
+          if [ "${{ github.event_name }}" == "push" ] && [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "Terraform will only run on the main branch. Exiting..."
+            exit 0
+          fi
+        shell: bash
+
       - name: Configure Terraform
         run: |
           mkdir -p ~/.terraform
