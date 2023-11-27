@@ -1,11 +1,11 @@
 variable "service_name" {
   description = "Name for the App Runner service"
-  default     = "kandidat2028terraform"  # You can change the default value for the service name.
+  default     = "kandidat2028terraform"
 }
 
 variable "image_repository_url" {
   description = "URL of the ECR repository for the App Runner service"
-  default     = "244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028"  # Update with the actual ECR URL.
+  default     = "244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028"
 }
 
 resource "aws_iam_role" "role_for_apprunner_service" {
@@ -71,11 +71,10 @@ resource "aws_apprunner_service" "service" {
   }
 }
 
-data "aws_iam_policy_document" "policy" {
-  statement {
-    effect    = "Allow"
-    actions   = ["rekognition:*", "s3:*", "cloudwatch:*"]
-    resources = ["*"]
+terraform {
+  backend "s3" {
+    bucket = "kandidat-2028"
+    key    = "terraform.tfstate"
+    region = "eu-west-1"
   }
 }
-
