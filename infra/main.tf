@@ -1,20 +1,10 @@
-variable "service_name" {
-  description = "Name for the App Runner service"
-  default     = "kandidat2028terraform"
-}
-
-variable "image_repository_url" {
-  description = "URL of the ECR repository for the App Runner service"
-  default     = "244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028"
-}
-
 resource "aws_iam_role" "role_for_apprunner_service" {
-  name               = "kjell-role-thingy"
+  name               = "kandidate2028role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
 resource "aws_iam_policy" "policy" {
-  name        = "kjell-apr-policy-thingy"
+  name        = "kandidate2028policy"
   description = "Policy for App Runner instance"
   policy      = data.aws_iam_policy_document.policy.json
 }
@@ -68,5 +58,13 @@ resource "aws_apprunner_service" "service" {
     }
 
     auto_deployments_enabled = true
+  }
+}
+
+terraform {
+  backend "s3" {
+    bucket = "kandidat-2028"
+    key    = "terraform.tfstate"
+    region = "eu-west-1"
   }
 }

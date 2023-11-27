@@ -54,17 +54,19 @@ jobs:
       - name: Configure Terraform
         run: |
           mkdir -p ~/.terraform
-          echo "backend \"s3\" {
-            bucket = \"kandidat-2028\"
-            key    = \"terraform.tfstate\"
-            region = \"eu-west-1\"
-          }" > infra/backend.tf
+          echo 'terraform {
+            backend "s3" {
+              bucket = "kandidat-2028"
+              key    = "terraform.tfstate"
+              region = "eu-west-1"
+            }
+          }' > main.tf
         working-directory: ${{ github.workspace }}
 
       - name: Initialize Terraform
         run: terraform init
-        working-directory: infra
+        working-directory: ${{ github.workspace }}
 
       - name: Apply Terraform changes
         run: terraform apply -auto-approve
-        working-directory: infra
+        working-directory: ${{ github.workspace }}
