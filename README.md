@@ -12,6 +12,7 @@ Du må kanskje også oppdatere Docker-bilde-navnet og andre parametere i arbeids
 oppg 5
 
 A) 
+ 
 
 CI eller i andre ord kontinuerlig integrasjon er en form av praksis som blir brukt i programmering der koding med endringer blir jevlingt integrert i et felles
 repository. Hoved Målet i CI er å kunne oppdage og løse problemer i tidlig utviklingsfase før de blir til en større hindring i utviklingsfase. som oftest så 
