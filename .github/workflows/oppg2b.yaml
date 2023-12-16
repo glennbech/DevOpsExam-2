@@ -25,14 +25,14 @@ jobs:
         run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
         
       - name: Build Docker image
-        run: docker build -t 244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028:latest .
+        run: docker build -t 244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028s:latest .
 
       - name: Build and push Docker image
         if: github.ref == 'refs/heads/main'
         run: |
           COMMIT_HASH=$(git rev-parse --short=8 HEAD)
-          IMAGE_URI=244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028
-          docker tag 244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028:latest $IMAGE_URI:$COMMIT_HASH
+          IMAGE_URI=244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028s
+          docker tag 244530008913.dkr.ecr.eu-west-1.amazonaws.com/ecrkandidat2028s:latest $IMAGE_URI:$COMMIT_HASH
           docker push $IMAGE_URI:$COMMIT_HASH
           docker push $IMAGE_URI:latest
 
@@ -65,7 +65,7 @@ jobs:
           echo 'terraform {
             backend "s3" {
               bucket = "kandidat-2028"
-              key    = "terraform.tfstate"
+              key    = "terraform-s.tfstate"
               region = "eu-west-1"
             }
           }' > main.tf
