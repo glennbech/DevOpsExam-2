@@ -1,4 +1,3 @@
-com/example/s3rekognition/PPEClassificationResponse.class
-com/example/s3rekognition/PPEController.class
 com/example/s3rekognition/S3RekognitionApplication.class
+com/example/s3rekognition/PPEClassificationResponse.class
 com/example/s3rekognition/PPEResponse.class
